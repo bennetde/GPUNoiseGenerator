@@ -16,9 +16,9 @@ Afterwards, you should be able to open the Editor under `Tools->Noise Generator`
 
 ## TODO
 
-[] 3D texture support
-[] Tiling textures
-[] API-Support for direct usage without the generator
+- [ ] 3D texture support
+- [ ] Tiling textures
+- [ ] API-Support for direct usage without the generator
 
 ## Screenshots
 ![Example of the editor generating white noise](https://github.com/bennetde/GPUNoiseGenerator/blob/main/Documentation/Screenshots/EditorNoise.png)
