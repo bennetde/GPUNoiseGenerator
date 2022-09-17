@@ -1,0 +1,11 @@
+{
+  "name": "de.deboben.gpunoisegen",
+  "version": "1.0.0",
+  "description": "A generator to easily create different noise textures",
+  "displayName": "GPU Noise Generator",
+  "author": {
+    "name": "Bennet Deboben",
+    "email": "bennet.deboben@gmail.com",
+    "url": "bennetde.github.io"
+  }
+}

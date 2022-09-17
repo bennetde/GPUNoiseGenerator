@@ -1,0 +1,62 @@
+#include "Hash.cginc"
+#include "PerlinNoise.cginc"
+#include "Worley.cginc"
+#pragma kernel StaticNoise2D
+#pragma kernel PerlinNoise2D
+#pragma kernel Worley2D
+#pragma kernel Voronoi2D
+
+RWTexture2D<float4> result;
+float2 image_size;
+float scale;
+int octaves;
+float persistence;
+float time;
+uint seed = 5;
+
+[numthreads(8,8,1)]
+void StaticNoise2D (uint3 id : SV_DispatchThreadID)
+{
+    float3 texCoord = float3(id.x / image_size.x, id.y / image_size.y, 1.0);
+    uint bit = uint(8.0 * texCoord.x) + 8u * uint(4.0 * texCoord.y);
+    // float f0 = float(pcg(id.x + time)) * (1.0 / 4294967296.0);
+    // float f1 = float(pcg(id.y)) * (1.0 / 4294967296.0);
+
+    float3 color = prng(uint3(id / scale), seed);
+    result[id.xy] = float4(color, 1.0);
+}
+
+[numthreads(8,8,1)]
+void PerlinNoise2D (uint3 id : SV_DispatchThreadID)
+{
+    float3 texCoord = float3((id.x / image_size.x), id.y / image_size.y, scale);
+    float3 uvScaled = texCoord * scale;
+    float value = fbm(uvScaled.xy, octaves, persistence, seed);
+    result[id.xy] = float4(value.xxx, 1.0);
+}
+
+[numthreads(8,8,1)]
+void Worley2D (uint3 id : SV_DispatchThreadID)
+{
+    float2 texCoord = float2(id.x / image_size.x, id.y / image_size.y);
+    float columns = scale;
+    float rows = scale;
+    
+    float val = worley(texCoord, columns, rows, seed);
+
+    float3 color = float3(val,val,val);
+    result[id.xy] = float4(color, 1.0);
+}
+
+[numthreads(8,8,1)]
+void Voronoi2D (uint3 id : SV_DispatchThreadID)
+{
+    float2 texCoord = float2(id.x / image_size.x, id.y / image_size.y);
+    float columns = scale;
+    float rows = scale;
+    
+    float2 val = voronoi(texCoord, columns, rows, seed);
+
+    float3 color = float3(val.x, val.y, 0.0);
+    result[id.xy] = float4(color, 1.0);
+}
