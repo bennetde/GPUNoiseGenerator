@@ -42,12 +42,9 @@ var executor = new PerlinNoise3DExecutor()
     Seed = 34030, // Random seed
     Tiling = true
 };
-// 
+
 executor.SetRenderTexture(_renderTexture);
 executor.Execute(); // Fill Render Texture with Perlin Noise-Data
-
-
-
 ```
 ## TODO
 
