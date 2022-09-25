@@ -8,6 +8,7 @@
 
 RWTexture2D<float4> result;
 float2 image_size;
+float2 offset;
 float scale;
 int octaves;
 float persistence;
@@ -29,8 +30,8 @@ void StaticNoise2D (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,1)]
 void PerlinNoise2D (uint3 id : SV_DispatchThreadID)
 {
-    float3 texCoord = float3((id.x / image_size.x), id.y / image_size.y, scale);
-    float3 uvScaled = texCoord * scale;
+    float2 texCoord = float2((id.x / image_size.x), id.y / image_size.y);
+    float2 uvScaled = (texCoord + offset) * scale;
     float value = fbm(uvScaled.xy, octaves, persistence, seed);
     result[id.xy] = float4(value.xxx, 1.0);
 }

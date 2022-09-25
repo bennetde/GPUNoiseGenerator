@@ -1,0 +1,35 @@
+#pragma kernel PerlinNoise3D
+#pragma kernel StaticNoise3D
+
+#include "PerlinNoise.cginc"
+#include "Hash.cginc"
+
+RWTexture3D<float4> result;
+float3 image_size;
+float3 offset;
+float scale;
+uint octaves;
+float persistence;
+uint seed;
+bool tiling;
+
+// Used params: image_size, offset, scale, octaves, persistence, seed
+[numthreads(8,8,8)]
+void PerlinNoise3D (uint3 id : SV_DispatchThreadID)
+{
+    const float3 texCoord = float3(id.x / image_size.x, id.y / image_size.y, id.z / image_size.z);
+    float3 uvScaled = ((texCoord + offset) * scale);
+    // TODO: Tiling is just hacked in right now and probably doesn't work with images that are not square.
+    float value = fbm3d(uvScaled.xyz, octaves, persistence, tiling ? scale : image_size.x, seed);
+    result[id.xyz] = float4(value.xxxx);
+}
+
+// Used params: image_size, offset, scale, seed
+[numthreads(8,8,8)]
+void StaticNoise3D (uint3 id : SV_DispatchThreadID)
+{
+    float3 texCoord = float3(id.x / image_size.x, id.y / image_size.y, id.z / image_size.z);
+    int3 idOffset = id + offset;
+    float3 color = prng(asint(texCoord*scale), seed);
+    result[id.xyz] = float4(color, 1.0);
+}
