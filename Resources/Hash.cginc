@@ -24,8 +24,26 @@ uint2 pcg2d(uint2 v, uint seed = 1013904223u)
     return v;
 }
 
+// // http://www.jcgt.org/published/0009/03/02/
+// uint3 pcg3d(uint3 v, uint seed = 1013904223u) {
+//
+//     v = v * 1664525u + seed;
+//
+//     v.x += v.y*v.z;
+//     v.y += v.z*v.x;
+//     v.z += v.x*v.y;
+//
+//     v ^= v >> 16u;
+//
+//     v.x += v.y*v.z;
+//     v.y += v.z*v.x;
+//     v.z += v.x*v.y;
+//
+//     return v;
+// }
+
 // http://www.jcgt.org/published/0009/03/02/
-uint3 pcg3d(uint3 v, uint seed = 1013904223u) {
+int3 pcg3d(int3 v, uint seed = 1013904223u) {
 
     v = v * 1664525u + seed;
 
@@ -44,7 +62,7 @@ uint3 pcg3d(uint3 v, uint seed = 1013904223u) {
 
 float3 prng(float3 p, uint seed = 1013904223u)
 {
-    return pcg3d(asuint(p), seed) * (1.0/float(0xffffffffu));
+    return pcg3d(asint(p), seed) * (1.0/float(0xffffffffu));
 }
 
 float2 prng(float2 p, uint seed = 1013904223u)
